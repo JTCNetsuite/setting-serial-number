@@ -23,11 +23,16 @@ export const constant = {
     },
 
     INT_SERIAL_NUMBER: {
+        ID: 'customrecord_jtc_integ_serialnumber',
         SALES_ORDER: 'custrecord_jtc_integ_salesorder_id',
         NUM_SERIAL: 'custrecord_jtc_inte_serial_number',
-        ITEM: 'custrecord_jtc_integr_data_salesorder'
+        ITEM: 'custrecord_jtc_integr_data_salesorder',
+        ERRO_MSG: 'custrecord_jtc_integ_serialerror'
     },
     INVENTORY_NUMBER: {
         NUM_SERIAL: 'inventorynumber'
+    },
+    SCRIPT_PARAMS: {
+        AUTHOR_EMAIL: 'custscript_jtc_author_email'
     }
 }

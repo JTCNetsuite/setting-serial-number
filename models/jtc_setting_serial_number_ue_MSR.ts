@@ -171,9 +171,9 @@ const searchNumLote = (itemid, numLote) => {
     }).run().getRange({start: 0, end:100});
 
     if (seaNumSerieLote.length > 0) {
-        return seaNumSerieLote
+        return seaNumSerieLote;
     } else {
-        return ""
+        throw "Numero de lote não encontrado!";
     }    
     
 }
