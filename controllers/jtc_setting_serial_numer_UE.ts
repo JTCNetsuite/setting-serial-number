@@ -58,7 +58,7 @@ export const afterSubmit: EntryPoints.UserEvent.afterSubmit = (ctx: EntryPoints.
             type: cts.constant.INT_SERIAL_NUMBER.ID,
             id: currRecord.id
         });
-        recordInteSerialNumber.setValue({fieldId: cts.constant.INT_SERIAL_NUMBER.ERRO_MSG, value: e});
+        recordInteSerialNumber.setValue({fieldId: cts.constant.INT_SERIAL_NUMBER.ERRO_MSG, value: e.message});
 
         recordInteSerialNumber.save();
 
