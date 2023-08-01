@@ -7,7 +7,7 @@
     "outDir": "./JsCode",
     "newLine": "LF",
     "experimentalDecorators": true,
-    "noImplicitUseStrict": true,
+    // "noImplicitUseStrict": true,
     "baseUrl": ".",
     "lib": ["es5", "es2015.promise", "dom"],
     "paths": {

@@ -51,16 +51,17 @@ export const afterSubmit: EntryPoints.UserEvent.afterSubmit = (ctx: EntryPoints.
             author: employeeId,
             body:body,
             subject: 'Pedido de Venda - Configurar Estoque',
-            recipients: ['edison@jtcd.com.br']
+            recipients: ['edison@jtcd.com.br', 'william@jtcd.com.br']
         });
 
         const recordInteSerialNumber = record.load({
             type: cts.constant.INT_SERIAL_NUMBER.ID,
             id: currRecord.id
         });
-        recordInteSerialNumber.setValue({fieldId: cts.constant.INT_SERIAL_NUMBER.ERRO_MSG, value: e.message});
+        recordInteSerialNumber.setValue({fieldId: cts.constant.INT_SERIAL_NUMBER.ERRO_MSG, value: e});
 
-        recordInteSerialNumber.save();
+        const idRecorSerialNumber = recordInteSerialNumber.save();
+        log.audit("idRecorSeiral number", idRecorSerialNumber);
 
 
     }
