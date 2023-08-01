@@ -181,7 +181,7 @@ const searchNumLote = (itemid, numLote) => {
     if (seaNumSerieLote.length > 0) {
         return seaNumSerieLote;
     } else {
-        throw "Numero de lote não encontrado!";
+        throw {"message": "Número de lote não encontrado"};
     }    
     
 }
