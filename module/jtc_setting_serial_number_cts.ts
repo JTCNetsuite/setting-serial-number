@@ -19,7 +19,8 @@ export const constant = {
         },
         SUBRECORD_INVETORY_DETAITL: {
             ID: 'inventorydetail'
-        }
+        },
+        LOTE_PROCESSADO: 'custbody_jtc_integ_lote_preenchido'
     },
 
     INT_SERIAL_NUMBER: {

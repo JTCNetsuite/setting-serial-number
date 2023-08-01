@@ -28,6 +28,8 @@ export const afterSubmit = (ctx: EntryPoints.UserEvent.afterSubmitContext) => {
     var numLoteSerie = String(currRecord.getValue(cts.constant.INT_SERIAL_NUMBER.NUM_SERIAL));
     var numLoteArr = tranformToArrayNumserial(numLoteSerie);
 
+    let checkLote = false;
+
     const itemIntegracao = currRecord.getValue(cts.constant.INT_SERIAL_NUMBER.ITEM);
 
     for(var i=0; i < getLinecount; i++){
@@ -92,7 +94,9 @@ export const afterSubmit = (ctx: EntryPoints.UserEvent.afterSubmitContext) => {
                 });
 
 
-                inventoryDetail.commitLine({sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID})
+                inventoryDetail.commitLine({sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID});
+
+                checkLote = true;
             }
          
 
@@ -130,7 +134,9 @@ export const afterSubmit = (ctx: EntryPoints.UserEvent.afterSubmitContext) => {
                     });
     
     
-                    inventoryDetail.commitLine({sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID})
+                    inventoryDetail.commitLine({sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID});
+
+                    checkLote = true;
                 }
                 
             }
@@ -140,7 +146,9 @@ export const afterSubmit = (ctx: EntryPoints.UserEvent.afterSubmitContext) => {
 
         recordSales.commitLine({sublistId:cts.constant.SALES_ORDER.SUBLIST_ITEM.ID});
     }
-
+    if(checkLote) {
+        recordSales.setValue({fieldId: cts.constant.SALES_ORDER.LOTE_PROCESSADO, value: true});   
+    }
 
     const retIdSales = recordSales.save({ignoreMandatoryFields: true});
     log.debug("retIdSales", retIdSales);
