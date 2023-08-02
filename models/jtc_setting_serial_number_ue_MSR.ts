@@ -13,145 +13,150 @@ import * as cts from "../module/jtc_setting_serial_number_cts";
 
 
 export const afterSubmit = (ctx: EntryPoints.UserEvent.afterSubmitContext) => {
-    const currRecord = ctx.newRecord;
-    const idSaleOrder = currRecord.getValue(cts.constant.INT_SERIAL_NUMBER.SALES_ORDER);
+   try {
+        const currRecord = ctx.newRecord;
+        const idSaleOrder = currRecord.getValue(cts.constant.INT_SERIAL_NUMBER.SALES_ORDER);
 
-    const recordSales = record.load({
-        type: record.Type.SALES_ORDER,
-        id: idSaleOrder,
-        isDynamic: true
-    });
-    
-    const getLinecount = recordSales.getLineCount({sublistId: cts.constant.SALES_ORDER.SUBLIST_ITEM.ID});
-
-    
-    var numLoteSerie = String(currRecord.getValue(cts.constant.INT_SERIAL_NUMBER.NUM_SERIAL));
-    var numLoteArr = tranformToArrayNumserial(numLoteSerie);
-
-    let checkLote = false;
-
-    const itemIntegracao = currRecord.getValue(cts.constant.INT_SERIAL_NUMBER.ITEM);
-
-    for(var i=0; i < getLinecount; i++){
-        recordSales.selectLine({
-            sublistId: cts.constant.SALES_ORDER.SUBLIST_ITEM.ID,
-            line: i
+        const recordSales = record.load({
+            type: record.Type.SALES_ORDER,
+            id: idSaleOrder,
+            isDynamic: true
         });
-
-        const inventoryDetail = recordSales.getCurrentSublistSubrecord({
-            sublistId: cts.constant.SALES_ORDER.SUBLIST_ITEM.ID,
-            fieldId: cts.constant.SALES_ORDER.SUBRECORD_INVETORY_DETAITL.ID
-        });
-
-        const idItem = recordSales.getCurrentSublistValue({
-            sublistId: cts.constant.SALES_ORDER.SUBLIST_ITEM.ID, 
-            fieldId: cts.constant.SALES_ORDER.SUBLIST_ITEM.ITEM
-        });
-
-        const itemDisplay = String(recordSales.getCurrentSublistValue({
-            sublistId: cts.constant.SALES_ORDER.SUBLIST_ITEM.ID, 
-            fieldId:cts.constant.SALES_ORDER.SUBLIST_ITEM.ITEM_DISPLAY
-        })).split(" ")[0];
-
-        log.debug("itemi", idItem);
-        log.debug("itemdisplar", itemDisplay);
-
-        const lineCountInventoryDetail = inventoryDetail.getLineCount({sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID});
-
-
-        if (lineCountInventoryDetail == 0 && itemIntegracao == idItem) {
-            const numLote = searchNumLote(itemDisplay, numLoteArr);
-
-            
-            for (var j=0; j < numLote.length; j++) {
-                
-                log.debug('numberLote', numLote[j]);
-
-                const numberSerilFromSearch = numLote[j].getValue(cts.constant.INVENTORY_NUMBER.NUM_SERIAL);
-
-                const qtde = numLoteArr[numLoteArr.indexOf(numberSerilFromSearch) + 1]
-
-                log.debug("qtde", qtde);
-                log.debug("numberSerilFromSearch", numberSerilFromSearch);
-
-                inventoryDetail.selectNewLine({sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID});
-
-
-                log.debug("numLoteSerie", numLoteSerie);
         
-                
+        const getLinecount = recordSales.getLineCount({sublistId: cts.constant.SALES_ORDER.SUBLIST_ITEM.ID});
 
-                inventoryDetail.setCurrentSublistValue({
-                    fieldId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.NUM_SERIAL,
-                    sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID,
-                    value: numLote[j].id
-                });
+        
+        var numLoteSerie = String(currRecord.getValue(cts.constant.INT_SERIAL_NUMBER.NUM_SERIAL));
+        var numLoteArr = tranformToArrayNumserial(numLoteSerie);
 
-                inventoryDetail.setCurrentSublistValue({
-                    fieldId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.QUATITY,
-                    sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID,
-                    value: qtde
-                });
+        let checkLote = false;
+
+        const itemIntegracao = currRecord.getValue(cts.constant.INT_SERIAL_NUMBER.ITEM);
+
+        for(var i=0; i < getLinecount; i++){
+            recordSales.selectLine({
+                sublistId: cts.constant.SALES_ORDER.SUBLIST_ITEM.ID,
+                line: i
+            });
+
+            const inventoryDetail = recordSales.getCurrentSublistSubrecord({
+                sublistId: cts.constant.SALES_ORDER.SUBLIST_ITEM.ID,
+                fieldId: cts.constant.SALES_ORDER.SUBRECORD_INVETORY_DETAITL.ID
+            });
+
+            const idItem = recordSales.getCurrentSublistValue({
+                sublistId: cts.constant.SALES_ORDER.SUBLIST_ITEM.ID, 
+                fieldId: cts.constant.SALES_ORDER.SUBLIST_ITEM.ITEM
+            });
+
+            const itemDisplay = String(recordSales.getCurrentSublistValue({
+                sublistId: cts.constant.SALES_ORDER.SUBLIST_ITEM.ID, 
+                fieldId:cts.constant.SALES_ORDER.SUBLIST_ITEM.ITEM_DISPLAY
+            })).split(" ")[0];
+
+            // log.debug("itemi", idItem);
+            // log.debug("itemdisplar", itemDisplay);
+
+            const lineCountInventoryDetail = inventoryDetail.getLineCount({sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID});
 
 
-                inventoryDetail.commitLine({sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID});
-
-                checkLote = true;
-            }
-         
-
-           
-        } else {
-            if (itemIntegracao == idItem) {
+            if (lineCountInventoryDetail == 0 && itemIntegracao == idItem) {
                 const numLote = searchNumLote(itemDisplay, numLoteArr);
 
+                
                 for (var j=0; j < numLote.length; j++) {
-                    log.debug('numberLote', numLote[j]);
                     
+                    log.debug('numberLote', numLote[j]);
 
                     const numberSerilFromSearch = numLote[j].getValue(cts.constant.INVENTORY_NUMBER.NUM_SERIAL);
+
                     const qtde = numLoteArr[numLoteArr.indexOf(numberSerilFromSearch) + 1]
-    
+
                     log.debug("qtde", qtde);
                     log.debug("numberSerilFromSearch", numberSerilFromSearch);
-                    inventoryDetail.selectLine({sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID, line:j});
-    
-    
+
+                    inventoryDetail.selectNewLine({sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID});
+
+
                     log.debug("numLoteSerie", numLoteSerie);
             
                     
-    
+
                     inventoryDetail.setCurrentSublistValue({
                         fieldId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.NUM_SERIAL,
                         sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID,
                         value: numLote[j].id
                     });
-    
+
                     inventoryDetail.setCurrentSublistValue({
                         fieldId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.QUATITY,
                         sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID,
                         value: qtde
                     });
-    
-    
+
+
                     inventoryDetail.commitLine({sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID});
 
                     checkLote = true;
                 }
+            
+
+            
+            } else {
+                if (itemIntegracao == idItem) {
+                    const numLote = searchNumLote(itemDisplay, numLoteArr);
+
+                    for (var j=0; j < numLote.length; j++) {
+                        log.debug('numberLote', numLote[j]);
+                        
+
+                        const numberSerilFromSearch = numLote[j].getValue(cts.constant.INVENTORY_NUMBER.NUM_SERIAL);
+                        const qtde = numLoteArr[numLoteArr.indexOf(numberSerilFromSearch) + 1]
+        
+                        log.debug("qtde", qtde);
+                        log.debug("numberSerilFromSearch", numberSerilFromSearch);
+                        inventoryDetail.selectLine({sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID, line:j});
+        
+        
+                        log.debug("numLoteSerie", numLoteSerie);
+                
+                        
+        
+                        inventoryDetail.setCurrentSublistValue({
+                            fieldId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.NUM_SERIAL,
+                            sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID,
+                            value: numLote[j].id
+                        });
+        
+                        inventoryDetail.setCurrentSublistValue({
+                            fieldId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.QUATITY,
+                            sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID,
+                            value: qtde
+                        });
+        
+        
+                        inventoryDetail.commitLine({sublistId: cts.constant.SALES_ORDER.SUBLIST_INVENTORY_DETAIL.ID});
+
+                        checkLote = true;
+                    }
+                    
+                }
                 
             }
-            
+
+
+            recordSales.commitLine({sublistId:cts.constant.SALES_ORDER.SUBLIST_ITEM.ID});
+        }
+        if(checkLote) {
+            recordSales.setValue({fieldId: cts.constant.SALES_ORDER.LOTE_PROCESSADO, value: true});   
         }
 
-
-        recordSales.commitLine({sublistId:cts.constant.SALES_ORDER.SUBLIST_ITEM.ID});
-    }
-    if(checkLote) {
-        recordSales.setValue({fieldId: cts.constant.SALES_ORDER.LOTE_PROCESSADO, value: true});   
-    }
-
-    const retIdSales = recordSales.save({ignoreMandatoryFields: true});
-    log.debug("retIdSales", retIdSales);
+        const retIdSales = recordSales.save({ignoreMandatoryFields: true});
+        log.debug("retIdSales", retIdSales);
+   } catch (e) {
+        log.error('jtc_serial_number_ue_MSR.afterSubmit', e );
+        throw e;
+   }
 }
 
 
