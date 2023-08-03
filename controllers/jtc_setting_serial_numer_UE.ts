@@ -16,7 +16,9 @@ import * as cts from '../module/jtc_setting_serial_number_cts';
 
 export const afterSubmit: EntryPoints.UserEvent.afterSubmit = (ctx: EntryPoints.UserEvent.afterSubmitContext) => {
     try{
-        msr.afterSubmit(ctx);
+        if (ctx.type == ctx.UserEventType.EDIT || ctx.type == ctx.UserEventType.CREATE) {
+            msr.afterSubmit(ctx);
+        }
     } catch (e) {
         log.error("afterSubmit", e);
         const currRecord = ctx.newRecord;
