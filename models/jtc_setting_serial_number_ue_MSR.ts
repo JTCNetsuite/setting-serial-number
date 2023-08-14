@@ -12,7 +12,7 @@ import * as cts from "../module/jtc_setting_serial_number_cts";
 
 
 
-export const afterSubmit = (ctx: EntryPoints.UserEvent.afterSubmitContext) => {
+export const beforeSubmit = (ctx: EntryPoints.UserEvent.beforeSubmitContext) => {
    try {
         const currRecord = ctx.newRecord;
         const idSaleOrder = currRecord.getValue(cts.constant.INT_SERIAL_NUMBER.SALES_ORDER);
