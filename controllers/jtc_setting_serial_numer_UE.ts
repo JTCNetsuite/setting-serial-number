@@ -20,7 +20,7 @@ export const beforeSubmit: EntryPoints.UserEvent.beforeSubmit = (ctx: EntryPoint
             msr.beforeSubmit(ctx);
         }
     } catch (e) {
-        log.error("afterSubmit", e);
+        log.error("beforeSubmit", e);
         const currRecord = ctx.newRecord;
         
 
@@ -39,8 +39,6 @@ export const afterSubmit: EntryPoints.UserEvent.afterSubmit = (ctx: EntryPoints.
     try {
         const currRecord = ctx.newRecord;
         const idSaleOrder = String(currRecord.getValue(cts.constant.INT_SERIAL_NUMBER.SALES_ORDER));
-        const item = currRecord.getText(cts.constant.INT_SERIAL_NUMBER.ITEM);
-        const salesOrderText = currRecord.getText(cts.constant.INT_SERIAL_NUMBER.SALES_ORDER);
         const errorField = currRecord.getValue(cts.constant.INT_SERIAL_NUMBER.ERRO_MSG)
         log.debug('error fields', errorField)
         if (!!errorField) {
@@ -60,10 +58,9 @@ export const afterSubmit: EntryPoints.UserEvent.afterSubmit = (ctx: EntryPoints.
             const currScript = runtime.getCurrentScript();
             const employeeId = Number(currScript.getParameter({name: cts.constant.SCRIPT_PARAMS.AUTHOR_EMAIL}));
             const body = `Configurar o estoque do item: </br>
-                          ${item} <br></br>
                           </br>
                           Para pedido de venda:<br> </br>
-                          <a href="${baseUrl+urlSaleOrder}">${salesOrderText}</a><br></br>
+                          <a href="${baseUrl+urlSaleOrder}">Pedido de venda</a><br></br>
                           Registro Serial Number: <br></br>
                           <a href="${baseUrl + urlIntSerialNumber}">RT Serial Number</a>
             `;
