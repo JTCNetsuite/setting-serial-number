@@ -40,6 +40,10 @@ export const afterSubmit: EntryPoints.UserEvent.afterSubmit = (ctx: EntryPoints.
         const currRecord = ctx.newRecord;
         const idSaleOrder = String(currRecord.getValue(cts.constant.INT_SERIAL_NUMBER.SALES_ORDER));
         const errorField = currRecord.getValue(cts.constant.INT_SERIAL_NUMBER.ERRO_MSG)
+
+        const recSalesOrder = record.load({type: record.Type.SALES_ORDER, id: idSaleOrder})
+        const tranId = recSalesOrder.getValue(cts.constant.SALES_ORDER.TRANID)
+
         log.debug('error fields', errorField)
         if (!!errorField) {
             const urlSaleOrder = url.resolveRecord({
@@ -60,7 +64,7 @@ export const afterSubmit: EntryPoints.UserEvent.afterSubmit = (ctx: EntryPoints.
             const body = `Configurar o estoque do item: </br>
                           </br>
                           Para pedido de venda:<br> </br>
-                          <a href="${baseUrl+urlSaleOrder}">Pedido de venda</a><br></br>
+                          <a href="${baseUrl+urlSaleOrder}">Pedido de venda #${tranId}</a><br></br>
                           Registro Serial Number: <br></br>
                           <a href="${baseUrl + urlIntSerialNumber}">RT Serial Number</a>
             `;
