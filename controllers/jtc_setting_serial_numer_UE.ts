@@ -72,7 +72,7 @@ export const afterSubmit: EntryPoints.UserEvent.afterSubmit = (ctx: EntryPoints.
                 author: employeeId,
                 body:body,
                 subject: 'Pedido de Venda - Configurar Estoque',
-                recipients: ['edison@jtcd.com.br', 'william@jtcd.com.br', 'rogerio.rodrigues@dkcloud.com.br']
+                recipients: ['william@jtcd.com.br', 'luciano@jtcd.com.br']
             });
         }
 
